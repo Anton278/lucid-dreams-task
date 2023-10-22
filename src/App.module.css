@@ -1,0 +1,56 @@
+.input {
+  font-size: 16px;
+  padding: 10px 15px;
+  width: 100%;
+  border-radius: 5px;
+  line-height: 1.5;
+}
+
+.inputContainer {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.suggestions {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  background: #fff;
+  margin: 0;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  list-style-type: none;
+  padding: 5px 15px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  transition: 0.3s ease-out opacity;
+}
+.suggestionsVisible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.suggestionBtn {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.suggestionBtn:hover {
+  background: #90caf9;
+}
+
+.category {
+  color: #757575;
+}
