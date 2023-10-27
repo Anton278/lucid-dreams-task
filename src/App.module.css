@@ -65,6 +65,7 @@
 
 .tag {
   background: #e6e6e6;
+  white-space: nowrap;
 }
 
 .input {
