@@ -44,7 +44,7 @@ function App() {
 
     const q = e.target.value.replaceAll(/\W/g, "");
     if (!q.length) {
-      return;
+      return setShowSuggestions(false);
     }
     if (!items.data) {
       // check again in which case data is undefined
@@ -53,9 +53,6 @@ function App() {
     const suggestions = items.data
       .filter((item) => item.name.includes(q))
       .slice(0, 10);
-    if (!suggestions.length) {
-      return;
-    }
     setSuggestions(suggestions);
     setShowSuggestions(true);
   }
