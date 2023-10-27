@@ -89,7 +89,13 @@ function App() {
       return [
         ...oldFormula,
         { type: "operand", ...suggestion },
-        { type: "operator", value: "", id: uuidv4(), width: "100%" },
+        {
+          type: "operator",
+          value: "",
+          id: uuidv4(),
+          width: "100%",
+          autoFocus: true,
+        },
       ];
     });
     setShowSuggestions(false);
