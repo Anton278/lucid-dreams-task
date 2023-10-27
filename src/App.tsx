@@ -82,7 +82,9 @@ function App() {
     setFormula((oldFormula) => {
       const lastItem = oldFormula[oldFormula.length - 1];
       lastItem.value = lastItem.value.replaceAll(/\w/g, "");
-      lastItem.width = lastItem.value.length + "ch";
+      lastItem.width = lastItem.value.length
+        ? lastItem.value.length + "ch"
+        : "1ch";
       return [
         ...oldFormula,
         { type: "operand", ...suggestion },
@@ -98,6 +100,8 @@ function App() {
     setShowSuggestions(false);
     setSuggestions([]);
   }
+
+  function onTagXClick(tag: { [key: string]: any }) {}
 
   useEffect(() => {
     // focus last input after deleted last tag
@@ -129,7 +133,10 @@ function App() {
               />
             ) : (
               <div className={s.tag} key={item.id}>
-                {item.name}
+                {item.name} |{" "}
+                <button className={s.tagX} onClick={() => onTagXClick(item)}>
+                  x
+                </button>
               </div>
             )
           )}

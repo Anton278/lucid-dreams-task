@@ -66,6 +66,7 @@
 .tag {
   background: #e6e6e6;
   white-space: nowrap;
+  padding: 0px 5px;
 }
 
 .input {
@@ -74,4 +75,18 @@
   display: block;
   outline: 0;
   padding: 0;
+}
+
+.tagX {
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  color: #757575;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+.tagX:hover {
+  color: #000;
 }
