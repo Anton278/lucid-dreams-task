@@ -1,29 +1,25 @@
 import { useState, useEffect, useRef } from "react";
-import s from "./App.module.css";
-import { useDebounce } from "./hooks/useDebounce";
 import { useQuery } from "@tanstack/react-query";
+import { v4 as uuidv4 } from "uuid";
+
 import itemsService from "./services/items";
 import { Item } from "./models/item";
-import { v4 as uuidv4 } from "uuid";
+
+import s from "./App.module.css";
 
 function App() {
   const items = useQuery({
     queryKey: ["items"],
     queryFn: itemsService.getAll,
   });
-  const [value, setValue] = useState("");
-  const [suggestions, setSuggestions] = useState<Item[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const search = useDebounce(value);
+
   const [formula, setFormula] = useState<any[]>([
     { type: "operator", value: "", width: "100%", id: uuidv4() },
   ]);
-  const [selectedRange, setSelectedRange] = useState([0, 0]);
+  const [suggestions, setSuggestions] = useState<Item[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
   const lastInputRef = useRef<HTMLInputElement>(null);
-
-  const operators = ["+", "-", "*", "/"];
-
-  console.log("formula ", formula);
 
   function onChange(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -45,6 +41,7 @@ function App() {
           : oldItem
       )
     );
+
     const q = e.target.value.replaceAll(/\W/g, "");
     if (!q.length) {
       return;
@@ -67,12 +64,11 @@ function App() {
     e: React.KeyboardEvent<HTMLInputElement>,
     isFirstInput: boolean
   ) {
-    console.log(e);
     if (e.ctrlKey && e.code === "KeyA") {
       // select all here...
     }
     if (e.currentTarget.selectionStart === 0 && e.code === "Backspace") {
-      if (!e.currentTarget.value.trim() && isFirstInput) {
+      if (isFirstInput) {
         return;
       }
       setFormula((oldFormula) => {
@@ -101,55 +97,58 @@ function App() {
   }
 
   useEffect(() => {
+    // focus last input after deleted last tag
     const lastFormulaItem = formula[formula.length - 1];
-    if (lastFormulaItem?.autoFocus) {
-      lastInputRef.current?.focus();
+    if (!lastFormulaItem?.autoFocus) {
+      return;
     }
+    if (!lastInputRef.current) {
+      return;
+    }
+    lastInputRef.current.focus();
   }, [formula]);
 
   return (
-    <div>
-      <div className={s.container}>
-        <div className={s.inputWrapper}>
-          <div className={s.inputContainer}>
-            {formula.map((item, i) =>
-              item.type === "operator" ? (
-                <input
-                  type="text"
-                  className={s.input}
-                  value={item.value}
-                  key={item.id}
-                  style={{ width: item.width }}
-                  onChange={(e) => onChange(e, item, i === formula.length - 1)}
-                  onKeyDown={(e) => onKeyDown(e, i === 0)}
-                  ref={i === formula.length - 1 ? lastInputRef : undefined}
-                />
-              ) : (
-                <div className={s.tag} key={item.id}>
-                  {item.name}
-                </div>
-              )
-            )}
-          </div>
-          <ul
-            className={`${s.suggestions} ${
-              showSuggestions ? s.suggestionsVisible : ""
-            }`}
-          >
-            {suggestions.map((suggestion) => (
-              <li
-                className={s.suggestion}
-                key={suggestion.id}
-                onClick={() => onSuggestionClick(suggestion)}
-              >
-                <button className={s.suggestionBtn}>
-                  <span>{suggestion.name}</span>
-                  <span className={s.category}>{suggestion.category}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
+    <div className={s.container}>
+      <div className={s.inputWrapper}>
+        <div className={s.inputContainer}>
+          {formula.map((item, i) =>
+            item.type === "operator" ? (
+              <input
+                type="text"
+                className={s.input}
+                value={item.value}
+                key={item.id}
+                style={{ width: item.width }}
+                onChange={(e) => onChange(e, item, i === formula.length - 1)}
+                onKeyDown={(e) => onKeyDown(e, i === 0)}
+                ref={i === formula.length - 1 ? lastInputRef : undefined}
+              />
+            ) : (
+              <div className={s.tag} key={item.id}>
+                {item.name}
+              </div>
+            )
+          )}
         </div>
+        <ul
+          className={`${s.suggestions} ${
+            showSuggestions ? s.suggestionsVisible : ""
+          }`}
+        >
+          {suggestions.map((suggestion) => (
+            <li
+              className={s.suggestion}
+              key={suggestion.id}
+              onClick={() => onSuggestionClick(suggestion)}
+            >
+              <button className={s.suggestionBtn}>
+                <span>{suggestion.name}</span>
+                <span className={s.category}>{suggestion.category}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
